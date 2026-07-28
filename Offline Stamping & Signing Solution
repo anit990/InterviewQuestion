@@ -1,0 +1,46 @@
+Offline Stamping & Signing Solution (Interview Answer)
+
+Problem:
+The organization was using a manual process for stamp paper purchase and document signing. Customers had to visit physical centers, purchase stamp paper offline, and sign documents manually. This process was time-consuming, increased operational costs, and delayed loan processing and customer onboarding.
+
+My Role:
+I was responsible for designing and implementing the backend integration for the digital eSign and eStamp solution. I worked closely with the business team, third-party vendors, and the frontend team to understand the requirements and integrate the required APIs into our application.
+
+Solution:
+I integrated the Leegality eSign and eStamp platform into our loan processing system. The solution automated the complete document execution process:
+
+Generated documents dynamically.
+Purchased eStamp paper electronically through the Leegality API.
+Sent documents to customers for Aadhaar-based eSign.
+Tracked the signing status in real time.
+Downloaded the final legally signed and stamped document automatically.
+Stored the signed documents securely in the document management system.
+
+This eliminated the need for physical stamp papers and manual signatures.
+
+Technology Used:
+
+Backend: ASP.NET Core (.NET 8) with C#
+API Integration: REST APIs using HttpClient
+Authentication: API Key / OAuth (based on vendor specification)
+Data Format: JSON
+Database: SQL Server / Oracle
+Logging: Serilog
+Error Handling: Retry mechanism, exception handling, and API response validation
+Architecture: Repository Pattern, Dependency Injection, Clean Architecture
+Version Control: Git
+Deployment: Azure / IIS
+
+Business Impact:
+
+Reduced the document execution time from several days to the same day.
+Enabled same-day eStamp purchase and Aadhaar-based eSign.
+Eliminated manual paperwork and physical document handling.
+Reduced operational costs and human errors.
+Improved customer experience through a completely digital process.
+Accelerated loan disbursement and customer onboarding.
+Ensured legal compliance with digitally signed and electronically stamped documents.
+Increased process efficiency and reduced turnaround time (TAT), helping the business process applications faster.
+One-Line Interview Summary
+
+"I integrated the Leegality eSign and eStamp APIs using ASP.NET Core and C#, enabling customers to purchase eStamp papers and complete legally valid Aadhaar-based digital signatures on the same day. This digitized the document execution process, reduced turnaround time, improved customer experience, and accelerated loan processing."
