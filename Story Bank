@@ -1,0 +1,413 @@
+1. Biggest Achievement (5 Stories)
+Story 1 – Leegality eSign & eStamp
+Digitized document signing and stamp paper purchase.
+Same-day eStamp and Aadhaar eSign.
+Reduced loan processing time.
+Eliminated manual paperwork.
+Story 2 – Salesforce to Oracle Integration
+Integrated Salesforce with Oracle.
+Processed lakhs of customer records.
+Built ETL with retry logic.
+Improved data accuracy and synchronization.
+Story 3 – CKYC Integration
+Integrated CERSAI CKYC APIs.
+Automated customer verification.
+Reduced manual verification.
+Achieved compliance.
+Story 4 – Sanchar Saathi API
+Integrated telecom verification.
+Verified 50K+ customer mobile numbers.
+Reduced fraud risk.
+Story 5 – Real-Time Notification
+Implemented SignalR + Firebase.
+Instant customer notifications.
+Improved customer engagement.
+2. Biggest Challenge (5 Stories)
+Story 1
+
+Large ETL processing (10+ lakh records)
+
+Challenge
+
+Memory issues
+Long execution time
+
+Solution
+
+Batch processing
+Async programming
+Retry mechanism
+Story 2
+
+Third-party API instability
+
+Challenge
+
+Vendor downtime
+
+Solution
+
+Retry policy
+Queue failed requests
+Alert support team
+Story 3
+
+Complex Oracle Stored Procedure
+
+Challenge
+
+Poor performance
+
+Solution
+
+SQL optimization
+Indexing
+Execution plan analysis
+Story 4
+
+Migrating Legacy MVC to .NET Core
+
+Challenge
+
+No downtime
+
+Solution
+
+Parallel deployment
+API compatibility
+Story 5
+
+Production performance issue
+
+Challenge
+API taking 20 seconds
+
+Solution
+
+Query optimization
+Caching
+Pagination
+3. Failure (5 Stories)
+Story 1
+
+Forgot Null Validation
+
+Impact
+Production error
+
+Learning
+Always validate input.
+
+Story 2
+
+Poor Time Estimation
+
+Delivered late.
+
+Learning
+Break work into smaller tasks.
+
+Story 3
+
+Didn't Ask Enough Questions
+
+Built feature incorrectly.
+
+Learning
+Clarify business requirements first.
+
+Story 4
+
+Missed Edge Cases
+
+QA found bugs.
+
+Learning
+Think beyond happy path.
+
+Story 5
+
+Skipped Logging
+
+Issue difficult to debug.
+
+Learning
+Logging is essential.
+
+4. Team Conflict (5 Stories)
+Story 1
+
+Frontend vs Backend API contract
+
+Solved through Swagger documentation.
+
+Story 2
+
+Database team delaying release
+
+Scheduled technical meeting.
+
+Created dependency tracker.
+
+Story 3
+
+Disagreement on Architecture
+
+Microservices vs Monolith
+
+Presented pros and cons.
+
+Business selected Microservices.
+
+Story 4
+
+Code Review Conflict
+
+Focused discussion on coding standards instead of personal opinions.
+
+Story 5
+
+Vendor Integration Delay
+
+Coordinated meetings between vendor and internal teams.
+
+5. Leadership (5 Stories)
+Story 1
+
+Mentored two junior developers.
+
+Story 2
+
+Led backend development during Tech Lead leave.
+
+Story 3
+
+Created coding standards.
+
+Story 4
+
+Conducted knowledge-sharing sessions.
+
+Story 5
+
+Owned production deployment.
+
+6. Tight Deadline (5 Stories)
+Story 1
+
+Regulatory release in one week.
+
+Prioritized must-have features.
+
+Delivered on time.
+
+Story 2
+
+Customer demo in three days.
+
+Worked with QA daily.
+
+Story 3
+
+Production hotfix in two hours.
+
+Story 4
+
+Loan disbursement release before financial quarter-end.
+
+Story 5
+
+Weekend production deployment.
+
+7. Customer Issue (5 Stories)
+Story 1
+
+Document signing failed.
+
+Added retry logic.
+
+Story 2
+
+Customer dashboard slow.
+
+Optimized queries.
+
+Story 3
+
+Mobile verification API timeout.
+
+Implemented asynchronous processing.
+
+Story 4
+
+Loan status incorrect.
+
+Fixed synchronization process.
+
+Story 5
+
+Duplicate notifications.
+
+Improved event handling.
+
+8. Learning Something New (5 Stories)
+Story 1
+
+Learned Salesforce APIs.
+
+Story 2
+
+Learned Oracle optimization.
+
+Story 3
+
+Learned Azure Service Bus.
+
+Story 4
+
+Learned Leegality integration.
+
+Story 5
+
+Learned Angular standalone components.
+
+9. Difficult Manager (5 Stories)
+Story 1
+
+Manager wanted hourly updates.
+
+Created progress dashboard.
+
+Story 2
+
+Manager frequently changed priorities.
+
+Maintained backlog.
+
+Story 3
+
+Manager gave aggressive timelines.
+
+Provided realistic estimates with effort breakdown.
+
+Story 4
+
+Manager focused only on delivery.
+
+Communicated technical risks early.
+
+Story 5
+
+Manager questioned technical decisions.
+
+Presented performance metrics to support recommendations.
+
+10. Proudest Project (5 Stories)
+Story 1
+
+Digital Lending Platform
+
+Highlights:
+
+Salesforce
+Oracle
+CKYC
+eSign
+eStamp
+Angular
+CQRS
+Story 2
+
+Loan Onboarding Automation
+
+Reduced TAT.
+
+Story 3
+
+Enterprise ETL Solution
+
+Processed lakhs of records.
+
+Story 4
+
+Real-Time Notification Platform
+
+SignalR + Firebase.
+
+Story 5
+
+Legacy System Modernization
+
+Migrated MVC to .NET Core + Angular.
+
+Additional Behavioral Stories
+Production Support
+Memory leak
+API crash
+Database deadlock
+SSL certificate expiry
+Server outage
+Innovation
+Built reusable API framework.
+Common exception middleware.
+Centralized logging.
+Generic repository.
+Shared Angular components.
+Cost Saving
+Removed duplicate API calls.
+Optimized SQL.
+Reduced server load.
+Reduced manual work.
+Reduced operational cost.
+Decision Making
+Queue vs synchronous processing.
+SQL vs NoSQL.
+Cache vs database.
+SignalR vs polling.
+Background service vs scheduled job.
+Communication
+Business discussions.
+Client meetings.
+Vendor coordination.
+Requirement gathering.
+Sprint planning.
+Ownership
+Managed end-to-end feature delivery.
+Handled production issues.
+Coordinated releases.
+Performed root cause analysis.
+Documented technical solutions.
+Architecture
+CQRS implementation.
+Microservices.
+API Gateway.
+JWT security.
+Dependency Injection.
+Performance Optimization
+Indexing.
+Async programming.
+Caching.
+Batch processing.
+Pagination.
+Quality
+Unit testing.
+Code review.
+SonarQube fixes.
+Logging.
+Exception handling.
+Career Growth
+Transition from MVC to .NET Core.
+Learned Angular.
+Adopted Azure.
+Worked with Microservices.
+Integrated enterprise APIs.
+Interview Tip
+
+Prepare these stories so each one highlights:
+
+Situation: What was happening?
+Task: What were you responsible for?
+Action: What technical and communication steps did you take?
+Result: Use measurable outcomes where possible (reduced turnaround time, improved performance, processed lakhs of records, reduced defects, etc.).
+
+With this story bank, you'll have strong examples to answer almost any behavioral interview question while keeping the stories authentic to your experience.
