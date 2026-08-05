@@ -1,0 +1,83 @@
+1. ref का उपयोग कब करें?
+जब किसी मेथड को किसी वेरिएबल की पुरानी वैल्यू को पढ़ना (Read) हो और उसमें कुछ बदलाव (Modify) करना हो, तब ref का इस्तेमाल करते हैं। इसमें डेटा दोनों तरफ (मेथड के अंदर और बाहर) फ्लो करता है।
+नियम (Rules for ref):
+वेरिएबल को मेथड में भेजने से पहले Initialize (वैल्यू असाइन) करना ज़रूरी है, वरना कंपाइलर एरर देगा।
+मेथड के लिए यह ज़रूरी नहीं है कि वह इस वेरिएबल को कोई नई वैल्यू दे ही (यह ऑप्शनल है)।
+1. When to use ref
+Use ref when a method needs to read and potentially modify an existing variable. Data flows bi-directionally (into the method and back out.
+Rules for ref:
+The variable must be initialized before it is passed to the method, or the compiler will throw an error.
+The method is not required to assign a new value to it.
+
+2. out का उपयोग कब करें?
+जब आप किसी मेथड से एक से ज़्यादा वैल्यूज़ रिटर्न (Output) कराना चाहते हैं, तब out का इस्तेमाल किया जाता है। इसमें डेटा सिर्फ एक तरफ (मेथड से बाहर) फ्लो करता है।
+नियम (Rules for out):
+वेरिएबल को मेथड में भेजने से पहले Initialize करना ज़रूरी नहीं है।
+मेथड के खत्म होने से पहले out वेरिएबल को कोई वैल्यू असाइन करना अनिवार्य (Must) है, वरना कंपाइलर एरर देगा।
+मेथड के अंदर आप इस वेरिएबल की पुरानी वैल्यू को तब तक नहीं पढ़ सकते जब तक आप इसे कोई नई वैल्यू न दे दें।
+2. When to use out
+Use out when you want a method to return multiple values or output data. Data flows unidirectionally (only out of the method). 
+Rules for out:
+The variable does not need to be initialized before being passed.
+The method must assign a value to the out parameter before the method returns, or the compiler will throw an error.
+The method cannot read the value of the variable until it assigns a value to it first. 
+
+//Creating Method with Ref Parameters
+public static void MathRef(int number1, int number2, ref int Addition, ref int Subtraction)
+{
+    Addition = number1 + number2; //This will Update the Addition variable inside the Main method
+    Subtraction = number1 - number2; //This will Update the Subtraction variable inside the Main method
+}
+//Creating Method with out Parameters
+public static void MathOut(int number1, int number2, out int Addition, out int Subtraction)
+{
+    Addition = number1 + number2; //This will Update the Addition variable inside the Main method
+    Subtraction = number1 - number2; //This will Update the Subtraction variable inside the Main method
+}
+static string GetPlayerStatsOut(string name, out int score, out int level)
+{
+    // Must assign values to all 'out' parameters before the method ends
+    score = 4500;
+    level = 12;
+    return $"Player: {name}";
+}
+
+static string GetPlayerStatsRef(string name, ref int score, ref int level)
+{
+    // not Must assign values to all 'ref' parameters before the method ends
+    score = 4500;
+    level = 12;
+    return $"Player: {name}";
+}
+static void Main(string[] args)
+{
+
+    int AdditionRef = 0;
+    int SubtractionRef=0 ;
+    MathRef(200, 100, ref AdditionRef, ref SubtractionRef);
+    Console.WriteLine($"AdditionRef: {AdditionRef}");
+    Console.WriteLine($"SubtractionRef: {SubtractionRef}");
+    //Call the Method with the OUT arguments
+    int AdditionOut = 0;
+    int SubtractionOut ;
+    MathOut(200, 100, out AdditionOut, out SubtractionOut);
+    Console.WriteLine($"AdditionOut: {AdditionOut}");
+    Console.WriteLine($"SubtractionOut: {SubtractionOut}");
+
+    string greeting = GetPlayerStatsOut("Alice", out int finalScore, out int finalLevel);
+
+    Console.WriteLine(greeting);      // Output: Player: Alice
+    Console.WriteLine(finalScore);    // Output: 4500
+    Console.WriteLine(finalLevel);    // Output: 12
+
+    int _finalScore=0;
+    int _finalLevel=0;
+
+    string greetingRef = GetPlayerStatsRef("Alice", ref _finalScore, ref _finalLevel);
+
+    Console.WriteLine(greetingRef);      // Output: Player: Alice
+    Console.WriteLine(_finalScore);    // Output: 4500
+    Console.WriteLine(_finalLevel);    // Output: 12
+
+    Console.ReadKey();
+}
