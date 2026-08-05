@@ -1,0 +1,44 @@
+1. Transient (New instance, every time)
+Definition: Jab bhi aap kisi class me is service ko request (inject) karenge, container har baar ek brand new instance (naya object) banakar dega. Agar ek hi HTTP request ke andar 2 alag-alag jagah ise call kiya gaya, toh dono ko alag-alag objects milenge.
+Real-World Example: Jaise ek restaurant me jab bhi naya order aata hai, ek naya Kacha Bill / Receipt Paper generate hota hai. Har item ke liye ek fresh calculation hoti hai.
+Coding Use Case: Lightweight aur stateless services ke liye (jisme koi data save karke nahi rakhna hota), jaise IEmailSender, IPasswordHasher, ya simple calculator helper functions.
+Syntax: builder.Services.AddTransient<IMyService, MyService>();
+________________________________________
+2. Scoped (One instance per HTTP Request)
+Definition: Ek poori HTTP Request (web API call) ke liye sirf ek hi instance banta hai. Us single request ke andar aap chahe jitne bhi components me use inject karein, sabhi ko wahi same object milega. Lekin jaise hi koi doosra user naye request bhejega, uske liye ek bilkul naya instance banega.
+Real-World Example: Jaise aap kisi badhiya restaurant me jate hain, toh aapke poore meal (request) ke liye ek Dedicated Waiter assign hota hai. Jab tak aap wahan hain, wahi waiter aapka order lega, paani layega aur bill dega. Lekin doosre table (doosri request) ke liye doosra waiter hota hai.
+Coding Use Case: Database connections (DbContext in Entity Framework) ke liye yeh sabse best hai. Ek request ke andar repository aur controller dono same database context aur transaction share karte hain.
+Syntax: builder.Services.AddScoped<IMyService, MyService>();
+________________________________________
+3. Singleton (Single instance for the lifetime of Application)
+Definition: Poori application me sirf ek hi instance banta hai. Jab app start hoti hai (ya pehli baar request hoti hai), tab yeh object banta hai aur jab tak application band nahi hoti, har user aur har request ko wahi same single object share kiya jata hai.
+Real-World Example: Jaise restaurant ke baahar laga hua Main Name Board ya Menu Display. Har aane wala customer (request) usi ek menu board ko dekhta hai. Board sabke liye bilkul ek hi rehta hai.
+Coding Use Case: Caching services (jaise IMemoryCache), Application Configuration providers, ya fir central Logging systems (ILogger) ke liye, jahan data ko globally share karna hota hai.
+Syntax: builder.Services.AddSingleton<IMyService, MyService>();
+
+🔥 Interviewer Ka Favorite Follow-up Question: Captive Dependency
+Question: "Kya hum ek Singleton service ke andar Scoped service ko inject kar sakte hain?" 
+Answer: Nahi! Agar aap Scoped service ko Singleton me inject karenge, toh runtime error aayega (ya fir galat behavior hoga). Iska reason yeh hai ki Singleton ka lifetime bada hota hai, toh uske andar baithi hui Scoped service bhi hamesha ke liye 'captive' (kaid) ho jayegi aur kabhi dispose nahi hogi. Isse multi-threading issues aur stale data ki problem ho sakti hai. Always remember: Shorter lifetime wale object ko longer lifetime wale object me directly inject nahi karna chahiye.
+
+1. Transient (New Instance, Every Time)
+How it works: A brand-new instance of the service is created every single time it is requested. If you inject this service into two different classes within the exact same HTTP request, both classes will get their own independent, separate instances.
+Real-World Analogy: Think of a paper receipt printed at a store. Every time a new transaction happens or someone asks for a bill, a fresh, brand-new piece of paper is generated from scratch.
+Coding Use Case: Used for lightweight, stateless services that hold no state/data across operations. Examples include IEmailSender, IPasswordHasher, or utility helpers.
+Syntax: builder.Services.AddTransient<IMyService, MyService>();
+________________________________________
+2. Scoped (One Instance per HTTP Request)
+How it works: A single instance is created once per HTTP Request. Every component or class that requests this service during that specific web request will share the exact same instance. However, a different user or a new request will get its own completely isolated instance.
+Real-World Analogy: Think of a dedicated waiter at a restaurant. When you sit down (start of request), a waiter is assigned to your table. That same waiter takes your order, brings your food, and handles your bill (lifetime of the request). But the table next to you has a completely different waiter.
+Coding Use Case: Best suited for services that need to hold state within a single request, most notably Entity Framework's DbContext. This ensures your repositories and controllers share the same database connection and transaction boundary for that specific request.
+Syntax: builder.Services.AddScoped<IMyService, MyService>();
+________________________________________
+3. Singleton (Single Instance for the Entire Application)
+How it works: A single instance is created either the first time it is requested or when the application starts. That exact same instance is shared across all users, all HTTP requests, and all components until the application shuts down.
+Real-World Analogy: Think of the main digital menu board hanging on the restaurant wall. Every customer who walks in looks at the exact same board. It is created once and shared globally by everyone.
+Coding Use Case: Ideal for heavy-to-create or globally shared services, such as an in-memory caching service (IMemoryCache), application configuration providers (IConfiguration), or centralized logging.
+Syntax: builder.Services.AddSingleton<IMyService, MyService>();
+
+🔥 Pro-Tip for the Interview: "Captive Dependencies"
+Interviewers love to follow up with: "Can you inject a Scoped service into a Singleton service?"
+The Answer: No, you should not. This creates a Captive Dependency issue. Because a Singleton never dies, the Scoped service injected inside it will be forced to live forever too. This completely breaks the Scoped behavior, meaning things like your database context (DbContext) will never close, causing memory leaks, thread-safety issues, and stale data. .NET Core will actually throw a runtime exception at startup if validation is enabled.
+
