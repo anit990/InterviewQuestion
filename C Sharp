@@ -1,0 +1,719 @@
+
+Value type vs Ref type. 
+
+Aspect	Value Type	Reference Type
+Memory storage	Stored directly on the stack	Stored on the heap, with a reference (pointer) on the stack
+Data handling	Contains the actual data	Contains a reference to the data’s memory location
+Assignment behavior	Copy of the value is created → changes don’t affect the original	Copy of the reference is created → changes affect the original object
+Default value	Zero/null equivalent (e.g., 0 for int, false for bool)	Always null until explicitly assigned
+Examples	int, float, bool, struct, enum	class, object, string, array, delegate
+Performance	Faster, lightweight, suitable for small data	Slightly slower, better for complex objects and large data
+
+"In C#, value types store the actual data directly on the stack, so when you assign one variable to another, a copy of the data is made. Examples include int, struct, and enum. On the other hand, reference types store a pointer to the data on the heap. Assigning one reference type variable to another copies the reference, not the data, meaning both variables point to the same object. Examples include class, string, and arrays. The key difference is that value types are copied by value, while reference types are copied by reference."
+
+Ref vs Out, give real time example and usage. 
+
+Aspect	Ref	Out
+Initialization	Variable must be initialized before passing	Variable does not need to be initialized before passing
+Purpose	Used when the called method needs to read and modify the value	Used when the called method needs to return multiple values
+Direction	Two-way: data flows in and out	One-way: data flows out only
+Usage scenario	When you want to update an existing value	When you want to return extra values without using return type
+Example types	Updating a counter, modifying a flag	Parsing methods, returning multiple results
+
+
+"In C#, both ref and out are used to pass arguments by reference. The difference is that ref requires the variable to be initialized before passing, and it allows both reading and writing inside the method. out does not require initialization, but the method must assign a value before returning. ref is useful when you want to modify an existing value, while out is typically used when you need to return multiple values from a method."
+
+
+
+
+
+ref
+void UpdateSalary(ref int salary)
+{
+    salary += 5000; // modifies existing value
+}
+
+int empSalary = 30000;
+UpdateSalary(ref empSalary);
+Console.WriteLine(empSalary); // Output: 35000
+
+out
+bool TryParseEmployee(string input, out int empId)
+{
+    return int.TryParse(input, out empId);
+}
+
+string input = "101";
+int id;
+if (TryParseEmployee(input, out id))
+    Console.WriteLine("Employee ID: " + id);
+else
+    Console.WriteLine("Invalid ID");
+
+
+Can ref keyword be used in Async programming? 
+
+Yes, the ref keyword can be used in async programming starting with C# 13, but with important restrictions. Before C# 13, using ref variables across await calls was disallowed because the memory location could become invalid when execution resumed. Now, C# 13 allows ref locals in async methods, provided they are safely managed across awaits.
+
+Const vs Readonly. 
+
+Aspect	const	readonly
+Initialization	Must be assigned at compile time	Can be assigned at runtime (in constructor)
+Value change	Cannot change after compilation	Can change only once, inside constructor
+Scope	Always static by default	Instance-level or static
+Usage	For fixed values known at compile time	For values determined at runtime but immutable afterward
+Examples	const double Pi = 3.14159;	readonly string ConnectionString;
+
+"In C#, const defines a compile-time constant whose value cannot change and must be known at compile time. It is implicitly static. readonly, on the other hand, allows assignment at runtime, typically in a constructor, and ensures the value cannot be modified afterward. Use const for values like mathematical constants, and readonly for values that depend on runtime logic but should remain immutable once set."
+
+
+
+
+
+What is garbage collector? 
+
+"The garbage collector in .NET automatically manages memory by reclaiming unused objects from the heap. It works with generations to optimize performance and ensures developers don’t have to manually free memory. However, unmanaged resources must be explicitly released using IDisposable."
+•  Memory allocation: When you create an object, memory is allocated from the managed heap.
+•  Automatic collection: GC identifies objects no longer in use and reclaims their memory.
+•  Generations: Objects are grouped into Gen 0, Gen 1, and Gen 2.
+Gen 0: Short-lived objects (e.g., local variables).
+Gen 1: Medium-lived objects.
+Gen 2: Long-lived objects (e.g., static data).
+•  Large Object Heap: Special area for objects > 85 KB, managed separately.
+•  Finalization: Before reclaiming, GC may call finalizers (~Destructor) to clean up unmanaged resources.
+•  Forced collection: Developers can trigger GC manually using GC.Collect(), though it’s generally discouraged.
+
+
+
+How to remove unmanaged code?( How we remove garbage in unmanaged code?) 
+
+•  Manual allocation: Memory is allocated using functions like malloc, calloc, or new.
+•  Manual deallocation: Memory must be explicitly freed using free (C) or delete (C++).
+•  Resource management: Handles, sockets, file descriptors, etc., must be closed manually.
+•  RAII pattern: In C++, Resource Acquisition Is Initialization ensures resources are released when objects go out of scope (via destructors).
+•  Smart pointers: Modern C++ uses unique_ptr, shared_ptr, and weak_ptr to automatically manage memory and reduce leaks.
+
+"In unmanaged code, garbage is removed manually by the programmer using free or delete. Unlike .NET’s garbage collector, unmanaged environments rely on patterns like RAII and smart pointers to prevent leaks. The responsibility is entirely on the developer to ensure proper memory cleanup."
+
+Throw vs Throw ex 
+
+•  throw → Used when you want to bubble up the exception for logging or higher-level handling without losing context.
+•  throw ex → Rarely used; only if you want to deliberately mask the original stack trace (e.g., security reasons).
+"The difference between throw and throw ex is that throw preserves the original stack trace, while throw ex resets it. Best practice is to always use throw when re-throwing exceptions, because it makes debugging much easier."
+
+
+
+
+
+
+What are access modifiers 
+Modifier	Scope	Usage Example
+public	Accessible from anywhere	Used for APIs, methods, or properties that must be exposed globally
+private	Accessible only within the same class	Used for internal helper methods or sensitive data
+Protected	Accessible within the same class and derived classes	Used in inheritance scenarios
+Internal	Accessible only within the same assembly	Used for components meant for internal project use
+protected internal	Accessible within the same assembly and derived classes	Hybrid scope for flexible design
+private protected	Accessible within the same class and derived classes inside the same assembly	More restrictive than protected internal
+
+"Access modifiers in C# define the visibility of classes and members. public makes them accessible everywhere, private restricts them to the class, protected allows access in derived classes, internal restricts to the same assembly, and combinations like protected internal or private protected provide hybrid scopes. They are essential for encapsulation and controlling how code is exposed."
+
+What is Partial class give real time scenario 
+"Partial classes allow splitting a class across multiple files. They’re especially useful in large projects, auto-generated code scenarios, or when multiple developers work on the same class. At compile time, all parts are combined into one class."
+
+Partial class vs Partial method in C#
+"Partial classes split a class across multiple files, useful for large projects and auto-generated code. Partial methods allow declaring optional hooks inside partial classes — if implemented, they run; if not, the compiler removes them. Together, they support extensibility and clean separation of generated vs custom logic."
+
+Aspect	Partial Class	Partial Method
+Definition	Splits a class across multiple files	Declares a method signature in one part of a partial class, with optional implementation in another
+Purpose	Organize large classes, support multiple developers, separate auto-generated code	Provide hooks for optional logic without forcing implementation
+Usage	Common in WinForms, Entity Framework, ASP.NET auto-generated code	Used in code generation scenarios where methods may or may not need implementation
+Requirement	All parts must use partial keyword	Must be inside a partial class/struct
+Compilation	Compiler merges all parts into one class	If no implementation is provided, compiler removes the declaration (no IL generated)
+What are generics? Have you implemented any in your project?
+Generics in C# are a way Generics in C# are a way to create classes, methods, interfaces, and delegates with a placeholder for the data type. Instead of writing separate code for each type (like int, string, double), you write one generic definition that works with any type.
+•  Type safety: Generics enforce compile-time type checking, reducing runtime errors.
+•  Reusability: One generic class/method can handle multiple data types.
+•  Performance: Avoids boxing/unboxing, making code faster.
+•  Flexibility: Works with collections, algorithms, and custom classes.
+
+"Generics allow us to write type-safe, reusable, and efficient code. In my project, I implemented a generic repository pattern to handle CRUD operations for multiple entities, which reduced duplication and improved maintainability."
+
+Generics vs Dynamic in C#
+Aspect	Generics	Dynamic
+Type checking	Compile-time type safety	Runtime type resolution
+Performance	Faster (no boxing/unboxing, optimized by compiler)	Slower (runtime binding, more overhead)
+Errors	Caught at compile time	Errors only appear at runtime
+Flexibility	Works with any type but requires constraints (where T : ...)	Can hold any type, no constraints
+Usage	Collections (List<T>), repositories, reusable algorithms	Interoperability with COM, dynamic languages, reflection-heavy scenarios
+Example	List<int> ensures only integers	dynamic obj = "Hello"; obj.NonExistentMethod(); (runtime error)
+
+"Generics provide compile-time type safety and performance, making them ideal for reusable, strongly typed code. Dynamic, on the other hand, defers type checking to runtime, offering flexibility but at the cost of safety and speed. In my projects, I’ve used generics for repository patterns and collections, while dynamic was useful when automating Excel through COM objects."
+
+Generics vs Reflection in C#
+Aspect	Generics	Reflection
+Definition	Allows type-safe, reusable code with placeholders for data types	Provides metadata inspection and runtime type manipulation
+Type safety	Enforced at compile time	Determined at runtime (less safe)
+Performance	Faster, avoids boxing/unboxing	Slower, incurs runtime overhead
+Usage	Collections, repositories, reusable algorithms	Dynamic loading, plugin systems, serialization, testing frameworks
+Errors	Caught at compile time	Errors may occur at runtime
+Flexibility	Works with strongly typed data	Works with unknown types at runtime
+
+
+What are collections and its type.
+In C#, collections are specialized classes that store groups of related objects. They provide more flexibility than arrays because they can grow or shrink dynamically, and they come with built-in methods for searching, sorting, and manipulating data.
+1. Non-Generic Collections
+Found in System.Collections namespace.
+Store objects as object type → type casting required.
+Examples:
+ArrayList → dynamic array.
+Hashtable → key-value pairs.
+Stack → LIFO (Last In, First Out).
+Queue → FIFO (First In, First Out).
+2. Generic Collections
+Found in System.Collections.Generic namespace.
+Type-safe (no boxing/unboxing).
+Examples:
+List<T> → strongly typed dynamic list.
+Dictionary<TKey, TValue> → key-value pairs.
+Queue<T> → FIFO with type safety.
+Stack<T> → LIFO with type safety.
+HashSet<T> → unique elements only.
+
+"Collections in C# are classes that store groups of objects. They come in non-generic, generic, concurrent, and specialized forms. In my projects, I’ve used List<T> for storing records, Dictionary<TKey, TValue> for fast lookups, and ConcurrentDictionary for thread-safe caching."
+
+
+What is Dictionary, List, HashTable 
+"A Dictionary is a generic, type-safe key-value collection, ideal for fast lookups. A List is a generic ordered collection, best for sequential data. A Hashtable is a non-generic key-value collection, mostly used in legacy code. In modern projects, we prefer Dictionary and List because they are type-safe and more efficient."
+
+🔑 Dictionary
+Definition: A generic collection (Dictionary<TKey, TValue>) that stores key-value pairs.
+Type safety: Strongly typed (no boxing/unboxing).
+Performance: Fast lookups (average O(1) time complexity).
+Usage: When you need quick access to values based on unique keys.
+Example:
+csharp
+var dict = new Dictionary<int, string>();
+dict.Add(1, "Alice");
+dict.Add(2, "Bob");
+Console.WriteLine(dict[1]); // Output: Alice
+👉 Real-time usage: Mapping employee IDs to employee names.
+🔑 List
+Definition: A generic collection (List<T>) that stores elements in an ordered sequence.
+Type safety: Strongly typed.
+Performance: Dynamic resizing, fast iteration, but slower lookups compared to Dictionary.
+Usage: When you need an ordered collection of items.
+Example:
+csharp
+var list = new List<string>();
+list.Add("Apple");
+list.Add("Banana");
+Console.WriteLine(list[0]); // Output: Apple
+👉 Real-time usage: Storing a list of products in an e-commerce application.
+🔑 Hashtable
+Definition: A non-generic collection (Hashtable) that stores key-value pairs.
+Type safety: Not type-safe (stores objects → requires casting).
+Performance: Similar to Dictionary for lookups, but less efficient due to boxing/unboxing.
+Usage: Legacy code; replaced by Dictionary<TKey, TValue> in modern C#.
+Example:
+csharp
+Hashtable ht = new Hashtable();
+ht.Add(1, "Alice");
+ht.Add("ID", 100);
+Console.WriteLine(ht[1]); // Output: Alice
+👉 Real-time usage: Older applications where generics weren’t available.
+
+
+What is Stack and Queue? 
+"A Stack is a LIFO collection where the last item pushed is the first to be popped, commonly used in undo operations. A Queue is a FIFO collection where the first item enqueued is the first to be dequeued, often used in scheduling or task processing systems."
+
+Stack
+Definition: A collection that follows LIFO (Last In, First Out).
+Behavior: The last element added is the first one removed.
+Key Methods:
+Push() → adds an item.
+Pop() → removes and returns the top item.
+Peek() → returns the top item without removing it.
+Queue
+Definition: A collection that follows FIFO (First In, First Out).
+Behavior: The first element added is the first one removed.
+Key Methods:
+Enqueue() → adds an item.
+Dequeue() → removes and returns the first item.
+Peek() → returns the first item without removing it.
+
+
+Difference between Generics and non generics?
+In C#, the difference between Generics and Non-Generics lies mainly in type safety, performance, and flexibility.
+Generics
+Definition: Classes, methods, or collections defined with a type parameter (<T>).
+Type safety: Enforced at compile time (no casting needed).
+Performance: Faster because it avoids boxing/unboxing.
+Examples: List<T>, Dictionary<TKey, TValue>, custom generic classes.
+Usage: When you want reusable, type-safe code.
+Non-Generics
+Definition: Collections that store elements as object.
+Type safety: Not enforced → requires casting.
+Performance: Slower due to boxing/unboxing.
+Examples: ArrayList, Hashtable, Queue, Stack (non-generic versions).
+Usage: Legacy code, before generics were introduced in .NET 2.0.
+Aspect	Generics	Non-Generics
+Type safety	Compile-time	Runtime (casting required)
+Performance	High (no boxing/unboxing)	Lower (boxing/unboxing overhead)
+Flexibility	Strongly typed	Can store mixed types
+Examples	List<T>, Dictionary<TKey, TValue>	ArrayList, Hashtable
+Best practice	Preferred in modern C#	Used in legacy code
+
+"Generics in C# provide type safety and performance by allowing reusable code with type parameters. Non-generics, like ArrayList and Hashtable, store data as objects, requiring casting and causing boxing/unboxing overhead. In modern projects, generics are preferred because they are safer and faster, while non-generics are mostly found in legacy applications."
+
+
+What is Concurrent collection?
+"Concurrent collections in C# are thread-safe data structures like ConcurrentDictionary, ConcurrentQueue, and BlockingCollection. They are crucial in multi-threaded scenarios because they eliminate the need for manual locking, making code safer and more scalable. In my projects, I’ve used ConcurrentDictionary for caching and ConcurrentQueue for background job processing."
+
+
+What are delegates and built in delegates. 
+In C#, delegates are objects that represent references to methods. They are essentially type-safe function pointers — allowing methods to be passed as parameters, stored, or invoked dynamically. Delegates are the foundation for events and callbacks in .NET.
+
+"Delegates in C# are type-safe references to methods, enabling callbacks and event handling. Built-in delegates like Action, Func, and Predicate simplify common scenarios without needing custom delegate definitions. In my projects, I’ve used Func for reusable calculation logic and Predicate for filtering lists."
+
+Example
+// Define delegate
+public delegate void PaymentHandler(decimal amount);
+
+// Payment methods
+public class PaymentGateway
+{
+    public void PayPalPayment(decimal amount)
+    {
+        Console.WriteLine($"Paid {amount} via PayPal");
+    }
+
+    public void StripePayment(decimal amount)
+    {
+        Console.WriteLine($"Paid {amount} via Stripe");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        PaymentGateway gateway = new PaymentGateway();
+
+        // Assign delegate dynamically
+        PaymentHandler handler;
+
+        handler = gateway.PayPalPayment;
+        handler(1000); // Output: Paid 1000 via PayPal
+
+        handler = gateway.StripePayment;
+        handler(2000); // Output: Paid 2000 via Stripe
+    }
+}
+
+
+What is LINQ? 
+"LINQ is a feature in C# that integrates query capabilities directly into the language. It provides a unified, type-safe way to query collections, databases, and XML. In my projects, I’ve used LINQ extensively for filtering lists, querying databases with Entity Framework, and transforming data structures."
+
+Single vs SingleOrDefault - First vs FirstOrDefault - Select vs SelectMany with example
+🔑 Single vs SingleOrDefault
+Single → Returns the only element in a sequence. Throws an exception if:
+No element exists, or
+More than one element exists.
+SingleOrDefault → Returns the only element, or default(T) (e.g., null for reference types, 0 for int) if no element exists. Throws exception if more than one element exists.
+Example
+csharp
+var numbers = new List<int> { 5 };
+
+int result1 = numbers.Single();          // Output: 5
+int result2 = numbers.SingleOrDefault(); // Output: 5
+
+var emptyList = new List<int>();
+int result3 = emptyList.SingleOrDefault(); // Output: 0 (default int)
+👉 Use Single when you expect exactly one element. 👉 Use SingleOrDefault when you expect zero or one element.
+🔑 First vs FirstOrDefault
+First → Returns the first element in a sequence. Throws exception if sequence is empty.
+FirstOrDefault → Returns the first element, or default(T) if sequence is empty.
+Example
+csharp
+var numbers = new List<int> { 10, 20, 30 };
+
+int first = numbers.First();          // Output: 10
+int firstOrDefault = numbers.FirstOrDefault(); // Output: 10
+
+var emptyList = new List<int>();
+int result = emptyList.FirstOrDefault(); // Output: 0 (default int)
+👉 Use First when you know the collection has at least one element. 👉 Use FirstOrDefault when the collection might be empty.
+🔑 Select vs SelectMany
+Select → Projects each element into a new form. Returns a sequence of sequences if the projection itself is a collection.
+SelectMany → Flattens nested collections into a single sequence.
+Example
+csharp
+var students = new List<Student>
+{
+    new Student { Name = "Alice", Subjects = new List<string> { "Math", "Science" } },
+    new Student { Name = "Bob", Subjects = new List<string> { "History" } }
+};
+
+// Using Select → returns IEnumerable<List<string>>
+var subjects1 = students.Select(s => s.Subjects);
+// subjects1 = [["Math","Science"], ["History"]]
+
+// Using SelectMany → returns IEnumerable<string>
+var subjects2 = students.SelectMany(s => s.Subjects);
+// subjects2 = ["Math","Science","History"]
+👉 Use Select when you want to preserve the nested structure. 👉 Use SelectMany when you want to flatten nested collections.
+
+LINQ Queries practice , left join , right , inner . get 3rd highest
+🔑 LINQ Joins
+1. Inner Join
+Returns only matching records from both collections.
+csharp
+var result = from emp in employees
+             join dept in departments
+             on emp.DeptId equals dept.Id
+             select new { emp.Name, dept.DeptName };
+👉 Equivalent to SQL INNER JOIN.
+2. Left Join
+Returns all records from the left collection, and matching records from the right (null if no match).
+csharp
+var result = from emp in employees
+             join dept in departments
+             on emp.DeptId equals dept.Id into empDept
+             from ed in empDept.DefaultIfEmpty()
+             select new { emp.Name, DeptName = ed?.DeptName ?? "No Dept" };
+👉 Equivalent to SQL LEFT JOIN.
+3. Right Join
+LINQ doesn’t have a direct RIGHT JOIN, but you can simulate it by swapping collections.
+csharp
+var result = from dept in departments
+             join emp in employees
+             on dept.Id equals emp.DeptId into deptEmp
+             from de in deptEmp.DefaultIfEmpty()
+             select new { dept.DeptName, EmployeeName = de?.Name ?? "No Employee" };
+👉 Equivalent to SQL RIGHT JOIN.
+🔑 Get 3rd Highest Value
+Example: 3rd Highest Salary
+csharp
+var thirdHighest = employees
+                   .OrderByDescending(e => e.Salary)
+                   .Skip(2)   // Skip top 2
+                   .Take(1)   // Take the 3rd
+                   .FirstOrDefault();
+👉 This gives the 3rd highest salary employee.
+
+What is the effect of combining AsParallel with LINQ queries?
+"Using AsParallel with LINQ enables PLINQ, which parallelizes query execution across multiple cores. It improves performance for large or CPU-heavy datasets but may change result ordering and introduce thread-safety concerns. In practice, I’ve used PLINQ for log analysis and data processing tasks where sequential LINQ was too slow."
+
+Effects of AsParallel in LINQ
+Parallel execution: The query is split into tasks that run concurrently on multiple processors.
+Performance boost: Faster for CPU-intensive operations or large collections.
+Order changes: Results may not preserve the original order unless you explicitly use AsOrdered().
+Thread safety: If your query modifies shared state, you must ensure thread safety.
+Overhead: For small datasets, parallelization overhead may make queries slower.
+Exceptions: Exceptions are aggregated into an AggregateException.
+
+
+IEnumerable vs toList. 
+
+🔑 IEnumerable
+Definition: An interface that represents a sequence of elements that can be iterated using foreach.
+Deferred execution: LINQ queries returning IEnumerable are not executed immediately — they run only when you iterate over them.
+Lightweight: Does not store data, just provides a way to enumerate.
+Usage: Best when you want to query data lazily and avoid unnecessary memory usage.
+🔑 ToList()
+Definition: A LINQ extension method that executes the query immediately and materializes results into a List<T>.
+Immediate execution: Forces evaluation of the query at the point of calling.
+Stored results: Keeps data in memory, allowing multiple iterations without re-executing the query.
+Usage: Best when you need to cache results or perform multiple operations on the same dataset.
+
+
+IQueryable vs toList. 
+🔑 IQueryable
+Definition: An interface that allows LINQ queries to be built and executed against a data source (like a database).
+Deferred execution: The query is not executed until you iterate over it (e.g., with foreach) or force execution.
+Provider-based: Works with LINQ providers (like Entity Framework, LINQ to SQL) to translate queries into SQL and run them on the database.
+Efficiency: Only the necessary data is fetched from the database.
+🔑 ToList()
+Definition: A LINQ extension method that executes the query immediately and materializes results into a List<T>.
+Immediate execution: Forces the query to run right away.
+In-memory data: Results are stored in memory, allowing multiple iterations without hitting the database again.
+Performance trade-off: May fetch more data than needed if used too early.
+
+
+
+IQueryable vs IEnumerable 
+🔑 IEnumerable
+Definition: Represents an in-memory collection that can be iterated using foreach.
+Execution: Queries run in memory (on the client side).
+Deferred execution: LINQ queries are executed only when iterated.
+Use case: Best for working with collections already loaded in memory (like List<T>, arrays).
+🔑 IQueryable
+Definition: Extends IEnumerable to support remote query execution (e.g., databases).
+Execution: Queries are translated into SQL (or provider-specific language) and executed on the server side.
+Deferred execution: Query runs only when iterated, but execution happens at the data source.
+Use case: Best for Entity Framework, LINQ to SQL, or external data sources.
+
+
+Aspect	IEnumerable	IQueryable	ToList
+Definition	Interface for in-memory iteration	Interface for remote query execution (e.g., DB)	Extension method that materializes results into a List<T>
+Execution location	Client-side (in memory)	Server-side (translated into SQL or provider-specific query)	Client-side, after immediate execution
+Execution timing	Deferred (runs when iterated)	Deferred (runs when iterated)	Immediate (runs at call time)
+Performance	Loads all data, then filters in memory	Efficient — filters at source before fetching	May fetch all data at once, higher memory usage
+Return type	IEnumerable<T>	IQueryable<T>	List<T>
+Best use case	Working with collections already loaded in memory	Querying large datasets from databases or external sources	Caching results for reuse or multiple iterations
+Flexibility	Limited to LINQ-to-Objects	Supports LINQ-to-SQL, LINQ-to-Entities, LINQ-to-Providers	Converts any query result into a concrete list
+Deferred execution	Yes	Yes	No
+Memory usage	Low (iterates on demand)	Low (fetches only needed data)	High (stores all results in memory)
+Example scenario	Filtering a list of products already loaded from a file	Querying employees with salary > 50,000 directly from DB	Fetching employee list once and reusing it in UI rendering
+Error handling	Errors occur during iteration	Errors occur during query translation/execution	Errors occur immediately at execution
+
+
+
+
+What is yeild keyword? 
+"The yield keyword in C# is used in iterator methods to return values one at a time (yield return) or stop iteration (yield break). It enables deferred execution and simplifies writing enumerators. In real projects, I’ve used yield for streaming large datasets and building custom collections without extra memory overhead."
+
+Yield return → Provides the next element in a sequence without exiting the method.
+Yield break → Ends the iteration immediately.
+Deferred execution → The method’s state is preserved between iterations, so execution resumes where it left off.
+Return types → Typically IEnumerable, IEnumerable<T>, IEnumerator, or IEnumerator<T>.
+
+public static IEnumerable<int> EvenNumbers(int upto)
+{
+    for (int i = 0; i <= upto; i++)
+    {
+        if (i % 2 == 0)
+            yield return i; // returns one value at a time
+    }
+}
+
+// Usage
+foreach (int num in EvenNumbers(10))
+    Console.WriteLine(num); // Output: 0, 2, 4, 6, 8, 10
+
+break vs continue vs return.
+🔑 Break
+Definition: Immediately exits the nearest enclosing loop (for, while, do-while, foreach) or switch block.
+Effect: Stops the loop execution entirely.
+🔑 Continue
+Definition: Skips the current iteration and moves to the next iteration of the loop.
+Effect: Loop continues, but the remaining code in the current iteration is skipped.
+🔑 Return
+Definition: Exits the current method immediately and optionally returns a value.
+Effect: Ends method execution, control goes back to the caller.
+
+
+Reflections in c#. 
+"Reflection in C# allows runtime inspection and manipulation of assemblies, types, and members. It’s widely used in frameworks like Entity Framework, dependency injection containers, and serialization libraries. While powerful, it should be used carefully because it can impact performance and reduce type safety."
+
+🎯 Real-Time Scenarios
+ORM frameworks → Entity Framework uses reflection to map classes to database tables.
+Serialization → JSON/XML serializers inspect object properties at runtime.
+Dependency injection → DI containers use reflection to resolve constructors and inject dependencies.
+Plugins → Load assemblies dynamically and discover available classes/methods.
+Unit testing frameworks → NUnit/xUnit use reflection to find test methods marked with attributes.
+
+What is TPL 
+"TPL in C# is a high-level library for parallel and asynchronous programming. It uses tasks instead of manual threads, supports parallel loops, continuations, and cancellation. In real projects, I’ve used TPL for parallel data processing and handling multiple API calls efficiently."
+Key Features of TPL
+Task-based model → Represents asynchronous operations using Task and Task<TResult>.
+Parallel loops → Parallel.For and Parallel.ForEach for data parallelism.
+Task continuations → Chain tasks with ContinueWith.
+Cancellation → Cancel tasks gracefully using CancellationToken.
+Exception handling → Aggregate exceptions from multiple tasks.
+Efficient scheduling → Uses the .NET thread pool for optimal resource usage.
+
+
+TPL vs Thread 
+"Threads are low-level and give fine-grained control, but they’re harder to manage and scale. TPL is a higher-level abstraction that uses tasks, parallel loops, and thread pooling for efficient concurrency. In projects, I prefer TPL for most scenarios because it simplifies code and improves performance, but I use threads when I need direct control over execution."
+
+Thread → When you need low-level control, e.g., setting thread priority or affinity.
+TPL → For parallel data processing, handling multiple API calls, or background tasks in modern applications.
+Aspect	Thread	TPL
+Definition	Low-level unit of execution managed by the OS	High-level abstraction built on top of threads
+Namespace	System.Threading	System.Threading.Tasks
+Creation	new Thread(() => { ... })	Task.Run(() => { ... }) or Parallel.For
+Management	Manual start, stop, join, sleep	Automatic scheduling via thread pool
+Performance	Can waste resources if too many threads	Efficient, uses thread pool for reuse
+Ease of use	Complex synchronization (locks, monitors)	Simplified with tasks, continuations, cancellation tokens
+Scalability	Hard to scale for multi-core	Designed for multi-core scalability
+Error handling	Exceptions must be caught manually	Exceptions aggregated into AggregateException
+Use case	Fine-grained control over threads	Parallel loops, async tasks, high-level concurrency
+		
+
+
+Async vs Thread 
+"Async is about non-blocking I/O and uses tasks with await, while Thread is about running code concurrently in separate execution paths. Async is best for I/O-bound operations, Thread for CPU-bound. In practice, I use async for web requests and database calls, and threads for heavy computations."
+
+🔑 Async
+Definition: A keyword used with methods to enable asynchronous programming.
+Execution model: Non-blocking — allows the program to continue running while awaiting a task.
+Underlying mechanism: Uses the Task Parallel Library (TPL) and the thread pool, but doesn’t necessarily create new threads.
+Best for: I/O-bound operations (file access, web requests, database calls).
+Syntax: async keyword with await to pause execution until a task completes.
+
+🔑 Thread
+Definition: A low-level unit of execution managed by the OS.
+Execution model: Runs code concurrently in a separate execution path.
+Underlying mechanism: Directly creates and manages OS threads.
+Best for: CPU-bound operations (heavy calculations, simulations).
+Syntax: new Thread(() => { ... })
+
+Aspect	Async	Thread
+Level	High-level (language feature)	Low-level (OS construct)
+Use case	I/O-bound tasks (network, file, DB)	CPU-bound tasks (calculations, simulations)
+Execution	Non-blocking, uses thread pool	Dedicated OS thread
+Ease of use	Simplified with async/await	Manual management (start, join, abort)
+Performance	Efficient for many concurrent I/O tasks	Can waste resources if too many threads
+Error handling	Built-in with try/catch around await	Must handle manually
+Scalability	Very high (thousands of async tasks)	Limited (too many threads cause overhead)
+
+How to start a Task
+"You can start a task in C# using Task.Run, Task.Factory.StartNew, or by creating a Task and calling Start. Task.Run is the most common and recommended approach for simplicity, while StartNew is used for advanced scenarios. Tasks can also return results using Task<T>."
+Task.Run → Running background logging or sending emails asynchronously.
+Task.Factory.StartNew → Scheduling tasks with cancellation tokens in enterprise apps.
+Task<T> → Fetching data from APIs and returning results.
+
+What is async and await?
+🔑 Async
+Definition: Marks a method as asynchronous.
+Return types: Typically Task, Task<T>, or ValueTask.
+Purpose: Allows the method to contain await expressions.
+🔑 Await
+Definition: Suspends execution of the method until the awaited task completes.
+Non-blocking: The thread is freed to do other work while waiting.
+Resumes execution: Once the task finishes, execution continues from the same point.
+
+"Async marks a method as asynchronous, while await pauses execution until the task completes. Together, they make asynchronous code look synchronous, improving readability. In real projects, I use async/await for web requests, database calls, and file operations to keep applications responsive."
+
+
+
+
+
+
+Difference between Async/Await and TPL. 
+"Async/await is best for I/O-bound tasks because it keeps applications responsive by freeing threads while waiting. TPL is best for CPU-bound tasks because it efficiently distributes work across multiple cores. In practice, I use async/await for web requests and database calls, and TPL for parallel data processing or heavy computations."
+Aspect	Async/Await	TPL
+Definition	Language keywords (async, await) for asynchronous programming	A set of APIs (Task, Parallel) for parallel and concurrent programming
+Primary Use Case	I/O-bound operations (web requests, DB calls, file I/O)	CPU-bound operations (data processing, simulations, parallel loops)
+Execution Model	Non-blocking, frees thread while waiting	Uses thread pool to run tasks in parallel
+Ease of Use	High-level, readable, looks like synchronous code	More manual, requires explicit task creation and management
+Return Types	Task, Task<T>, ValueTask	Task, Task<T>
+Error Handling	Standard try/catch around await	Exceptions aggregated into AggregateException
+Performance	Scales well for thousands of async I/O tasks	Efficient for multi-core CPU utilization
+Best Scenario	Keeping UI responsive during long-running I/O	Running heavy computations across cores
+
+
+How does parallel processing work in .NET? 
+"Parallel processing in .NET uses TPL and PLINQ to distribute work across multiple cores. TPL handles partitioning, scheduling, and exceptions, while PLINQ provides query-like syntax for parallelism. It’s best for CPU-bound workloads like data processing or simulations, but not for trivial loops where overhead outweighs benefits."
+
+🔑 Core Components of Parallel Processing in .NET
+Task Parallel Library (TPL)
+Provides Task, Parallel.For, and Parallel.ForEach.
+Handles partitioning, scheduling, cancellation, and exception aggregation automatically.
+Dynamically scales concurrency to use all available processors.
+Parallel LINQ (PLINQ)
+Parallel implementation of LINQ-to-Objects.
+Splits collections into partitions and processes them concurrently.
+Ideal for query-like syntax with large datasets.
+Thread-safe collections
+Classes like ConcurrentDictionary, BlockingCollection, and ConcurrentQueue.
+Ensure safe access to shared data across multiple threads.
+Task schedulers
+Control how tasks are queued and executed.
+Default scheduler uses the .NET thread pool.
+
+
+
+
+
+
+How does Task Parallel Library (TPL) work? 
+"TPL works by representing work as tasks, scheduling them on the thread pool, and automatically partitioning workloads across CPU cores. It simplifies parallel loops, supports continuations, cancellation, and exception handling. In practice, I use TPL for CPU-bound workloads like data processing, while async/await is better for I/O-bound tasks."
+
+🔑 How TPL Works
+Task abstraction
+A Task represents a unit of work (like a method or lambda).
+Tasks can run asynchronously and return results (Task<T>).
+Thread pool usage
+TPL schedules tasks on the .NET thread pool, reusing threads instead of creating new ones.
+This reduces overhead and improves scalability.
+Parallel loops
+Parallel.For and Parallel.ForEach automatically partition work across multiple cores.
+Task continuations
+You can chain tasks using ContinueWith or await for sequential execution.
+Cancellation and exceptions
+Supports cooperative cancellation via CancellationToken.
+Exceptions are aggregated into AggregateException for easier handling.
+Load balancing
+TPL dynamically balances workloads across available CPU cores.
+
+Write code to call multiple APIs in parallel.
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            // Define multiple API calls
+            Task<string> api1 = client.GetStringAsync("https://api.example.com/data1");
+            Task<string> api2 = client.GetStringAsync("https://api.example.com/data2");
+            Task<string> api3 = client.GetStringAsync("https://api.example.com/data3");
+
+            // Run them in parallel
+            await Task.WhenAll(api1, api2, api3);
+
+            // Access results
+            Console.WriteLine("API1 Result: " + api1.Result);
+            Console.WriteLine("API2 Result: " + api2.Result);
+            Console.WriteLine("API3 Result: " + api3.Result);
+        }
+    }
+}
+
+
+
+
+
+
+Difference between IAsyncEnumerable vs Task-based interface. 
+🔑 Task-based Interface
+Definition → Represents a single asynchronous operation.
+Return types: Task (no result) or Task<T> (returns a result).
+Execution model: Runs once, completes once, returns a single value or no value.
+Best for: Asynchronous methods that produce one result (e.g., fetching data from an API).
+🔑 IAsyncEnumerable<T>
+Definition → Represents an asynchronous stream of data.
+Return type: IAsyncEnumerable<T> (multiple values over time).
+Execution model: Produces values one at a time asynchronously using await foreach.
+Best for: Asynchronous methods that produce multiple results (e.g., streaming rows from a database).
+
+
+How do you handle 10,000+ concurrent requests in Web API? 
+🔑 Core Strategies
+Async/Await everywhere
+Use asynchronous controllers (async Task<IActionResult>) so threads aren’t blocked while waiting for I/O (DB, file, network).
+This allows the thread pool to serve more requests concurrently.
+Connection pooling
+Reuse database and HTTP connections via pooling.
+Prevents resource exhaustion when thousands of requests hit at once.
+Load balancing
+Distribute requests across multiple servers using Nginx, Azure Front Door, or AWS ELB.
+Horizontal scaling ensures no single server is overwhelmed.
+Caching
+Use in-memory cache (MemoryCache), distributed cache (Redis), or response caching middleware.
+Reduces repeated expensive operations.
+Task Parallel Library (TPL)
+For CPU-bound workloads, use Task.Run, Parallel.ForEach, or PLINQ to utilize multiple cores.
+For I/O-bound workloads, rely on async/await instead of parallel loops.
+Throttling & rate limiting
+Protects backend services from overload.
+Implement policies with ASP.NET Core middleware or API gateways.
+Scalable hosting
+Deploy on Kubernetes, Azure App Service, or AWS ECS with auto-scaling enabled.
+Scale out dynamically based on traffic.
+
