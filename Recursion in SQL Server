@@ -1,0 +1,46 @@
+CREATE TABLE Employees
+(
+    Id INT,
+    Name VARCHAR(50),
+    ManagerId INT
+);
+
+INSERT INTO Employees VALUES
+(1, 'CEO', NULL),
+(2, 'Rahul', 1),
+(3, 'Anit', 2),
+(4, 'Mohan', 2),
+(5, 'Gaurav', 3);
+
+CEO
+ └── Rahul
+      ├── Anit
+      │    └── Gaurav
+      └── Mohan
+
+WITH EmployeeHierarchy AS
+(
+    -- Anchor Query
+    SELECT
+        Id,
+        Name,
+        ManagerId,
+        0 AS Level
+    FROM Employees
+    WHERE ManagerId IS NULL
+
+    UNION ALL
+
+    -- Recursive Query
+    SELECT
+        e.Id,
+        e.Name,
+        e.ManagerId,
+        eh.Level + 1
+    FROM Employees e
+    INNER JOIN EmployeeHierarchy eh
+        ON e.ManagerId = eh.Id
+)
+SELECT *
+FROM EmployeeHierarchy
+ORDER BY Level;
